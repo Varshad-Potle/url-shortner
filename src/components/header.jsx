@@ -24,7 +24,7 @@ const Header = () => {
           <img src="/logo1.png" alt="Trimme logo" className="h-16" />
         </Link>
 
-        <div>
+        <div className="flex gap-4">
           {user ? (
             <Button onClick={() => navigate("/auth")}>Login</Button>
           ) : (
