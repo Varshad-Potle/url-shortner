@@ -25,7 +25,7 @@ const Header = () => {
         </Link>
 
         <div className="flex gap-4">
-          {user ? (
+          {!user ? (
             <Button onClick={() => navigate("/auth")}>Login</Button>
           ) : (
             <DropdownMenu>
