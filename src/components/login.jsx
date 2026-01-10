@@ -1,9 +1,4 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { BeatLoader } from "react-spinners";
-import Error from "./error";
-import * as Yup from "yup";
+import {Input} from "./ui/input";
 import {
   Card,
   CardContent,
@@ -11,36 +6,65 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "./ui/card";
+import {Button} from "./ui/button";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import {useEffect, useState} from "react";
+import * as Yup from "yup";
+import Error from "./error";
+import {login} from "@/db/apiAuth";
+import {BeatLoader} from "react-spinners";
+import useFetch from "@/hooks/use-fetch";
+import {UrlState} from "@/context";
 
 const Login = () => {
-  const [errors, setErrors] = useState([]);
+  let [searchParams] = useSearchParams();
+  const longLink = searchParams.get("createNew");
+
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    const {name, value} = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
   };
 
+  const {loading, error, fn: fnLogin, data} = useFetch(login, formData);
+  const {fetchUser} = UrlState();
+
+  useEffect(() => {
+    if (error === null && data) {
+      fetchUser();
+      navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, data]);
+
   const handleLogin = async () => {
-    setErrors([]);
+    setErrors({});
     try {
       const schema = Yup.object().shape({
-        email: Yup.string().email("Invalid Email").required("Email is required"),
+        email: Yup.string()
+          .email("Invalid email")
+          .required("Email is required"),
         password: Yup.string()
-          .min(6, "Password must be at least of 6 characters")
-          .required("Password is Required"),
+          .min(6, "Password must be at least 6 characters")
+          .required("Password is required"),
       });
-      await schema.validate(formData, { abortEarly: false });
-      // api call
+
+      await schema.validate(formData, {abortEarly: false});
+      await fnLogin();
     } catch (e) {
       const newErrors = {};
+
       e?.inner?.forEach((err) => {
         newErrors[err.path] = err.message;
       });
@@ -56,7 +80,7 @@ const Login = () => {
         <CardDescription>
           to your account if you already have one
         </CardDescription>
-        {errors && <Error message={errors.message} />}
+        {error && <Error message={error.message} />}
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-1">
@@ -66,8 +90,8 @@ const Login = () => {
             placeholder="Enter Email"
             onChange={handleInputChange}
           />
-          {errors.email && <Error message={errors.email} />}
         </div>
+        {errors.email && <Error message={errors.email} />}
         <div className="space-y-1">
           <Input
             name="password"
@@ -75,14 +99,12 @@ const Login = () => {
             placeholder="Enter Password"
             onChange={handleInputChange}
           />
-          {errors.password && <Error message={errors.password} />}
         </div>
+        {errors.password && <Error message={errors.password} />}
       </CardContent>
       <CardFooter>
         <Button onClick={handleLogin}>
-            {/* here */}
-          {true ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
-          Login
+          {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
         </Button>
       </CardFooter>
     </Card>
