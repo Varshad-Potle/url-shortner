@@ -1,5 +1,3 @@
-// custom reusable react hook 
-
 import {useState} from "react";
 
 const useFetch = (cb, options = {}) => {
