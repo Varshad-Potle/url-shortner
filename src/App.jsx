@@ -8,6 +8,8 @@ import Link from "./pages/link";
 import RedirectLink from "./pages/redirect-link";
 import UrlProvider from "./context";
 import RequireAuth from "./components/require-auth";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "next-themes"; // 1. Import ThemeProvider
 
 const router = createBrowserRouter([
   {
@@ -19,10 +21,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: 
+        element: (
           <RequireAuth>
             <Dashboard />
-          </RequireAuth>,
+          </RequireAuth>
+        ),
       },
       {
         path: "/auth",
@@ -30,10 +33,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/link/:id",
-        element: 
-        <RequireAuth>
-          <Link />
-        </RequireAuth>,
+        element: (
+          <RequireAuth>
+            <Link />
+          </RequireAuth>
+        ),
       },
       {
         path: "/:id",
@@ -48,9 +52,14 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <UrlProvider>
-    <RouterProvider router={router} />
-  </UrlProvider>
+  return (
+    <UrlProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Toaster richColors />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </UrlProvider>
+  );
 }
 
 export default App;
