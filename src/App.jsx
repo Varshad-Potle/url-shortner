@@ -8,6 +8,7 @@ import Link from "./pages/link";
 import RedirectLink from "./pages/redirect-link";
 import UrlProvider from "./context";
 import RequireAuth from "./components/require-auth";
+import { Toaster } from "@/components/ui/sonner";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
 
 function App() {
   return <UrlProvider>
+    <Toaster richColors />
     <RouterProvider router={router} />
   </UrlProvider>
 }
