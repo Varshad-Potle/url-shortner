@@ -35,7 +35,7 @@ const LinkCard = ({ url, fetchUrls }) => {
       .then(() => {
         fetchUrls();
         // 3. Trigger Toast for Delete
-        toast.error("Link Deleted");
+        toast.success("Link Deleted");
       })
       .catch((error) => {
         toast.error("Failed to delete link");
