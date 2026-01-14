@@ -59,27 +59,27 @@ const CreateLink = () => {
   } = useFetch(createUrl, { ...formValues, user_id: user.id });
 
   useEffect(() => {
-    if(error === null && data){
-        navigate(`/link/${data[0].id}`)
+    if (error === null && data) {
+      navigate(`/link/${data[0].id}`);
     }
-  },[error, data])
+  }, [error, data]);
 
   const createNewLink = async () => {
     setErrors([]);
-    try{
-        await schema.validate(formValues, { abortEarly: false });
-        const canvas = ref.current.canvasRef.current;
-        const blob = await new Promise((resolve) => canvas.toBlob(resolve));
+    try {
+      await schema.validate(formValues, { abortEarly: false });
+      const canvas = ref.current.canvasRef.current;
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve));
 
-        await fnCreateUrl(blob);
-    }catch(e){
-        const newErrors = {};
-        e?.inner?.forEach((err) => {
-            newErrors[err.path] = err.message;
-        });
-        setErrors(newErrors);
+      await fnCreateUrl(blob);
+    } catch (e) {
+      const newErrors = {};
+      e?.inner?.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+      setErrors(newErrors);
     }
-  }
+  };
 
   return (
     <Dialog
@@ -125,11 +125,11 @@ const CreateLink = () => {
             onChange={handleChange}
           />
         </div>
-        {error && <Error message={error.message}/>}
+        {error && <Error message={error.message} />}
 
         <DialogFooter className="sm: justify-start">
           <Button
-            type = "button"
+            type="button"
             disabled={loading}
             onClick={createNewLink}
             variant="destructive"
