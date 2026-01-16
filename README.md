@@ -60,21 +60,16 @@ VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_anon_key
 2. **Tables:** Create tables for urls (to store link data) and clicks (to store analytics).
 3. **Storage:** Create storage buckets for *profile_pic* and *qrs*.
 4. **RLS Policies:** Enable Row Level Security (RLS) policies to ensure users can only manage their own data.
-```
----
 
-### 5️⃣ Start the Development Server
-
+### 2️⃣ Start the Development Server
 ```bash
-npm run dev
+npm install
 ```
-
 App will be running at:
 
 ```
 http://localhost:5173
 ```
-
 ---
 
 ## 🗂 Project Structure (High-Level)
