@@ -41,11 +41,10 @@ Trimme is a modern, full-stack URL shortener application designed to streamline 
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/Varshad-POtle/url-shortener.git
+git clone https://github.com/Varshad-Potle/url-shortener.git
 cd url-shortener
 ```
-
-### 2️⃣ Install Dependencies
+### 2️⃣ Start the Development Server
 
 ```bash
 npm install
@@ -57,7 +56,7 @@ Create a .env file in the root directory and add your supabase credentials:
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_anon_key
 ```
-### 4️⃣ Environment Configuration
+### 4️⃣ Supabase Setup
 1. Create a new Project on Supabase.
 2. **Tables:** Create tables for urls (to store link data) and clicks (to store analytics).
 3. **Storage:** Create storage buckets for *profile_pic* and *qrs*.
