@@ -11,7 +11,7 @@ Trimme is a modern, full-stack URL shortener application designed to streamline 
 
 * **User Authentication** – Secure login and signup functionality using Supabase Auth.
 * **URL Shortening** – Instantly convert long URLs into short, manageable links.
-* **Custom Aliases** – Option to create personalized custom URLs (e.g., trimme.in/my-custom-link)
+* **Custom Aliases** – Option to create personalized custom URLs.
 * **QR Code Generation** – Automatic QR code generation for every shortened link.
 * **Comprehensive Dashboard** – View total links created and total clicks at a glance.
 * **Advanced Analytics** – Visual charts displaying visitor location (City/Country) and device type (Mobile/Desktop).
