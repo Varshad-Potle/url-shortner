@@ -45,7 +45,6 @@ git clone https://github.com/Varshad-Potle/url-shortener.git
 cd url-shortener
 ```
 ### 2️⃣ Start the Development Server
-
 ```bash
 npm install
 ```
@@ -62,7 +61,7 @@ VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_anon_key
 3. **Storage:** Create storage buckets for *profile_pic* and *qrs*.
 4. **RLS Policies:** Enable Row Level Security (RLS) policies to ensure users can only manage their own data.
 ```
-
+---
 
 ### 5️⃣ Start the Development Server
 
