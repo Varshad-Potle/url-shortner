@@ -3,8 +3,7 @@
 Trimme is a modern, full-stack URL shortener application designed to streamline link management. It allows users to easily shorten long URLs into concise links, create custom aliases, and generate QR codes for quick sharing. Beyond simple shortening, Trimme provides a comprehensive dashboard with robust analytics, enabling users to track click performance, visitor locations, and device types in real-time.
 
 ---
-
-**Live Demo:** 
+**Live Demo:** [https://trimme.vercel.app](https://trimme.vercel.app)
 
 ---
 
