@@ -55,16 +55,27 @@ const Link = () => {
     link = url?.custom_url ? url?.custom_url : url.short_url;
   }
 
-  const downloadImage = () => {
-    const imageUrl = url?.qr;
-    const fileName = url?.title;
-    const anchor = document.createElement("a");
-    anchor.href = imageUrl;
-    anchor.download = fileName;
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    toast.success("QR Code downloaded successfully!");
+  const downloadImage = async () => {
+    try {
+      const imageUrl = url?.qr;
+      const fileName = url?.title;
+      
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      const anchor = document.createElement("a");
+      anchor.href = blobUrl;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      
+      URL.revokeObjectURL(blobUrl);
+      toast.success("QR Code downloaded successfully!");
+    } catch (error) {
+       toast.error("Failed to download QR Code");
+    }
   };
 
   const handleDelete = () => {
@@ -79,10 +90,12 @@ const Link = () => {
   };
 
   const handleCopy = () => {
-    const linkToCopy = `https://trimme.in/${url?.short_url}`;
+    const linkToCopy = `${window.location.origin}/${link}`;
     navigator.clipboard.writeText(linkToCopy);
     toast.success("Link copied to clipboard!");
   };
+
+  const displayUrl = `${window.location.origin}/${link}`;
 
   return (
     <>
@@ -94,14 +107,16 @@ const Link = () => {
           <span className="text-6xl font-extrabold hover:underline cursor-pointer">
             {url?.title}
           </span>
+          
           <a
-            href={`https://trimme.in/${link}`}
+            href={displayUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
+            className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer break-all"
           >
-            https://trimme.in/{link}
+            {displayUrl}
           </a>
+          
           <a
             href={url?.original_url}
             target="_blank"
@@ -144,7 +159,7 @@ const Link = () => {
           <CardHeader>
             <CardTitle className="text-4xl font-extrabold">Stats</CardTitle>
           </CardHeader>
-          {stats && stats.length? (
+          {stats && stats.length ? (
             <CardContent className="flex flex-col gap-6">
               <Card>
                 <CardHeader>
@@ -158,14 +173,13 @@ const Link = () => {
               <Location stats={stats} />
               <CardTitle>Device Info</CardTitle>
               <DeviceStats stats={stats} />
-          </CardContent>
-          ):(
+            </CardContent>
+          ) : (
             <CardContent>
-            {loadingStats === false
-              ?"No Statistics yet"
-              : "Loading Statistics.."
-            }
-          </CardContent>
+              {loadingStats === false
+                ? "No Statistics yet"
+                : "Loading Statistics.."}
+            </CardContent>
           )}
         </Card>
       </div>
