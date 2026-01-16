@@ -12,10 +12,9 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card } from "./ui/card";
 import Error from "./error";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react"; // Combined imports
 import * as yup from "yup";
 import QRCode from "react-qrcode-logo";
-import { useRef } from "react";
 import useFetch from "@/hooks/use-fetch";
 import { createUrl } from "@/db/apiUrls";
 import { BeatLoader } from "react-spinners";
@@ -40,7 +39,7 @@ const CreateLink = () => {
     longUrl: yup
       .string()
       .url("Must be a valid URL")
-      .required("Long URL is reqiured"),
+      .required("Long URL is required"),
     customUrl: yup.string(),
   });
 
@@ -81,6 +80,8 @@ const CreateLink = () => {
     }
   };
 
+  const currentDomain = window.location.host; 
+
   return (
     <Dialog
       defaultOpen={longLink}
@@ -97,7 +98,9 @@ const CreateLink = () => {
         </DialogHeader>
 
         {formValues?.longUrl && (
-          <QRCode value={formValues?.longUrl} size={250} ref={ref} />
+          <div className="flex justify-center my-2">
+             <QRCode value={formValues?.longUrl} size={200} ref={ref} />
+          </div>
         )}
 
         <Input
@@ -117,7 +120,10 @@ const CreateLink = () => {
         {errors.longUrl && <Error message={errors.longUrl} />}
 
         <div className="flex items-center gap-2">
-          <Card className="p-2">trimme.in</Card> /
+          <Card className="p-2 text-sm text-gray-400 whitespace-nowrap">
+             {currentDomain} /
+          </Card>
+          
           <Input
             id="customUrl"
             placeholder="Custom Link (optional)"
@@ -127,7 +133,7 @@ const CreateLink = () => {
         </div>
         {error && <Error message={error.message} />}
 
-        <DialogFooter className="sm: justify-start">
+        <DialogFooter className="sm:justify-start">
           <Button
             type="button"
             disabled={loading}
