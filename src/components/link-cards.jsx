@@ -7,25 +7,29 @@ import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
 
 const LinkCard = ({ url, fetchUrls }) => {
-  const downloadImage = () => {
-    const imageUrl = url?.qr;
-    const fileName = url?.title;
+  const downloadImage = async () => {
+    try {
+        const imageUrl = url?.qr;
+        const fileName = url?.title;
 
-    // create an anchor element
-    const anchor = document.createElement("a");
-    anchor.href = imageUrl;
-    anchor.download = fileName;
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
 
-    // append the anchor to the body
-    document.body.appendChild(anchor);
+        const anchor = document.createElement("a");
+        anchor.href = blobUrl;
+        anchor.download = fileName;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
 
-    // trigger the download by simulating a click event
-    anchor.click();
-
-    // remove the anchor element from the DOM after download is initiated
-    document.body.removeChild(anchor);
-
-    toast.success("QR Code downloaded successfully!");
+        // Cleanup
+        URL.revokeObjectURL(blobUrl);
+        toast.success("QR Code downloaded successfully!");
+    } catch (error) {
+        console.error("Download failed:", error);
+        toast.error("Failed to download QR Code");
+    }
   };
 
   const { loading: loadingDelete, fn: fnDelete } = useFetch(deleteUrl, url?.id);
@@ -34,7 +38,6 @@ const LinkCard = ({ url, fetchUrls }) => {
     fnDelete()
       .then(() => {
         fetchUrls();
-        // 3. Trigger Toast for Delete
         toast.success("Link Deleted");
       })
       .catch((error) => {
@@ -43,12 +46,18 @@ const LinkCard = ({ url, fetchUrls }) => {
   };
 
   const handleCopy = () => {
-    const linkToCopy = `https://trimme.in/${url?.short_url}`;
-    navigator.clipboard.writeText(linkToCopy);
+    const baseUrl = window.location.origin; 
+    const shortCode = url?.custom_url ? url?.custom_url : url.short_url;
     
-    // 4. Trigger Toast for Copy
+    const linkToCopy = `${baseUrl}/${shortCode}`;
+    
+    navigator.clipboard.writeText(linkToCopy);
     toast.success("Link copied to clipboard!");
-  }
+  };
+
+  // Helper for display text
+  const shortCode = url?.custom_url ? url?.custom_url : url.short_url;
+  const displayUrl = `${window.location.origin}/${shortCode}`;
 
   return (
     <div className="flex flex-col md:flex-row gap-5 border p-4 bg-gray-900 rounded-lg">
@@ -61,10 +70,11 @@ const LinkCard = ({ url, fetchUrls }) => {
         <span className="text-3xl font-extrabold hover:underline cursor-pointer">
           {url?.title}
         </span>
-        <span className="text-2xl text-blue-400 font-bold hover:underline cursor-pointer">
-          {" "}
-          https://trimme.in/{url?.custom_url ? url?.custom_url : url.short_url}
+        
+        <span className="text-2xl text-blue-400 font-bold hover:underline cursor-pointer break-all">
+          {displayUrl}
         </span>
+        
         <span className="flex items-center gap-1 hover:underline cursor-pointer">
           {url?.original_url}
         </span>
